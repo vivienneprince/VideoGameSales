@@ -2,32 +2,33 @@
 Stats Final Project - Team Nugget
 
 
-# Source and inspiration
+# Project Description
+## Source and inspiration
 Kaggle: https://www.kaggle.com/ashaheedq/video-games-sales-2019
 
 We like video games. We are interested to see the correlation between video game critic scores and sales as well as other questions relating to the video game industry. For this type of question, we would look at correlation and how the relationship has changed over time as well as for different countries. We can also ask other questions such as which publishers have the highest sales? Best reviews? How has video game sales changed over time? Geographically? What does the relationship between genre and sales look like? Genre and reviews? Which genres are more popular in each market?
 The data was scraped from http://www.vgchartz.com/gamedb/ using Python April 12th, 2019 and was hosted on Kaggle.
 
 
-# Project plan
+## Project plan
 
-## Part 1: Response Variable of Interest
+### Part 1: Response Variable of Interest
 Our response variable of interest will be video game sales.
  
  
-## Part 2: Categorical Explanatory Variable 
+### Part 2: Categorical Explanatory Variable 
 Our categorical explanatory variable will be the different publishers of the video games.
  
  
-## Part 3: Two-sample Test Variables
+### Part 3: Two-sample Test Variables
 Our two-sample test variables will be looking at the differences in sales between two genre types: sports and shooters. We choose these genres as they are most frequent and are very popular with similar gaming crowds ie. FIFA vs. COD essentially. 
  
  
-## Part 4: task outlined in part (5) of “Presentation_Expectations.pdf”
+### Part 4: task outlined in part (5) of “Presentation_Expectations.pdf”
 We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap. 
  
  
-## Part 5: Work Distribution
+### Part 5: Work Distribution
 For work distribution, we plan on working together collaboratively over voice call at least 4h a week and ramping up leading up to the presentation date. As a preliminary outline, Amanda will be working on parts 1 − 2, Ben on parts 3 − 4, Viv on part 5, and adjusting as needed. 
   
   
