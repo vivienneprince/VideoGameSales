@@ -18,7 +18,7 @@ Variables: 23
 # Description of all variables
 
 |Variable Name |Description                                            |
-|--------------|-------------------------------------------------------|
+|:-------------|:------------------------------------------------------|
 |Rank          |Rank of overall sales compared to other games          |
 |Name          |The title of the video game                            |
 |Basename      |The name of the video games, but with “-” instead of “ ”|
