@@ -9,13 +9,36 @@ We like video games. We are interested to see the correlation between video game
 The data was scraped from http://www.vgchartz.com/gamedb/ using Python April 12th, 2019 and was hosted on Kaggle.
 
 
+# Project plan
 
-# Data Dimensions
+## Part 1: Response Variable of Interest
+Our response variable of interest will be video game sales.
+ 
+ 
+## Part 2: Categorical Explanatory Variable 
+Our categorical explanatory variable will be the different publishers of the video games.
+ 
+ 
+## Part 3: Two-sample Test Variables
+Our two-sample test variables will be looking at the differences in sales between two genre types: sports and shooters. We choose these genres as they are most frequent and are very popular with similar gaming crowds ie. FIFA vs. COD essentially. 
+ 
+ 
+## Part 4: task outlined in part (5) of “Presentation_Expectations.pdf”
+We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap. 
+ 
+ 
+## Part 5: Work Distribution
+For work distribution, we plan on working together collaboratively over voice call at least 4h a week and ramping up leading up to the presentation date. As a preliminary outline, Amanda will be working on parts 1 − 2, Ben on parts 3 − 4, Viv on part 5, and adjusting as needed. 
+  
+  
+  
+# Metadata
+## Data Dimensions
 Observations: 55,792
 Variables: 23
 
 
-# Description of all variables
+## Description of all variables
 
 |Variable Name |Description                                            |
 |:-------------|:------------------------------------------------------|
