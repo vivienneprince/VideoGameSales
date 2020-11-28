@@ -29,5 +29,8 @@ videogames.df <- read.csv(file.path(project.dir, dataset.dir, 'vgsales-12-4-2019
 colnames(videogames.df)
 ```
 
+Hello friends
+```{r}
 
+```
 
