@@ -23,14 +23,46 @@ dataset.dir <- "data"
 outputs.dir <- "output"
 ```
 
-# Data Import
+# Data Import and Cleaning
+
+## Data Import
 ```{r}
 videogames.df <- read.csv(file.path(project.dir, dataset.dir, 'vgsales-12-4-2019.csv'))
 colnames(videogames.df)
 ```
 
-Hello friends
+## Data cleaning
+Since 
 ```{r}
+videogames.clean <- videogames.df %>% filter(Year < 2019)
+```
 
+
+# 1. {.tabset}
+
+Conduct some descriptive analysis on the data, figuring out:
+•distributions of variables,
+•variables that appear to be strongly related with each other (using appropriate methods to quantify the relationships based on whether variables are numerical or categorical).
+
+## Global Sales
+From the boxplot we can see that we have 2 extreme outliers. After investigating, it looks like two outliers are the for GTA V (ps3 and ps4)
+```{r}
+hist(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
+
+hist(videogames.clean$Global_Sales,
+     xlab = 'Global Sales (millions of USD)',
+     xlim = c(0, .5),
+     breaks = 10000)
+
+boxplot(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
+videogames.clean[which(videogames.clean$Global_Sales > 17), ]
+```
+
+```{r}
+vs.byyear <- videogames.df %>% 
+  group_by(Year) %>%
+  summarise(GlobalSales = sum(Global_Sales, na.rm = T),.groups = 'drop' )
+
+plot(x = vs.byyear$Year, y=vs.byyear$GlobalSales)
 ```
 
