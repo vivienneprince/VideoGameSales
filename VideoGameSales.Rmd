@@ -32,19 +32,35 @@ colnames(videogames.df)
 ```
 
 ## Data cleaning
-Since the data was collected in April of 2019
+Since the data was collected in April of 2019, we are excluding games with year = 2019 since it does not give a comprehensive picture of all the sales during 2019. 
 ```{r}
 videogames.clean <- videogames.df %>% filter(Year < 2019)
 ```
 
+## Data reshaping
+We want to compare sales across different regions, so it would be convenient to have one column "region" and then a corresponding column for sales in USD (millions).
+```{r}
+vs_byregion <- videogames.clean %>% gather(Region, Sales, Global_Sales:Other_Sales, na.rm = T)
+```
 
-# 1. {.tabset}
+
+
+
+# 1. Descriptive analysis {.tabset}
 
 Conduct some descriptive analysis on the data, figuring out:
-•distributions of variables,
-•variables that appear to be strongly related with each other (using appropriate methods to quantify the relationships based on whether variables are numerical or categorical).
+* distributions of variables,
+* variables that appear to be strongly related with each other (using appropriate methods to quantify the relationships based on whether variables are numerical or categorical).
 
-## Global Sales
+```{r}
+for (var in videogames.clean){
+  hist(var)
+  print(var)
+}
+```
+
+
+## All Sales
 From the boxplot we can see that we have 2 extreme outliers. After investigating, it looks like two outliers are the for GTA V (ps3 and ps4)
 ```{r}
 hist(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
@@ -56,13 +72,57 @@ hist(videogames.clean$Global_Sales,
 
 boxplot(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
 videogames.clean[which(videogames.clean$Global_Sales > 17), ]
+
+
 ```
 
+## Sales by year 
 ```{r}
-vs.byyear <- videogames.df %>% 
-  group_by(Year) %>%
-  summarise(GlobalSales = sum(Global_Sales, na.rm = T),.groups = 'drop' )
-
-plot(x = vs.byyear$Year, y=vs.byyear$GlobalSales)
+vs_sales.byregion.byyear <- vs_byregion %>% group_by(Year, Region)  %>% summarize(Sales = sum(Sales))
+vs_sales.byregion.byyear %>% ggplot(aes(x=Year, y= Sales))+
+  geom_line(aes(color = Region))
 ```
 
+## Scoring
+WRitE SOMethiNG Here
+```{r}
+fig <- plot_ly(x = videogames.clean$Critic_Score[which(!is.na(videogames.clean$Critic_Score))],
+             type = "histogram")
+
+fig
+
+ggplotly(
+  videogames.clean %>% ggplot() +
+    geom_histogram(binwidth = 0.5,aes(x = Critic_Score) ) +
+    geom_histogram(binwidth = 0.5,aes(x = User_Score, fill = "pink") ) 
+    
+)
+
+ggplotly(
+  videogames.clean %>% group_by(Year) %>% summarise(
+    User_Score = mean(User_Score, na.rm = T),
+    Critic_Score = mean(Critic_Score, na.rm = T), 
+    Vgchartzscore = mean(Vgchartzscore, na.rm = T)) %>% 
+    filter(Year >= 1989) %>%
+    mutate(User_Score2 = case_when(Year >= 1996 ~ User_Score,
+                             TRUE ~ NaN)) %>%
+    gather(ScoreType, Score, c(User_Score,Critic_Score,Vgchartzscore), na.rm = T)
+ %>%
+    
+    ggplot(aes(x = Year)) + # TODO : Make look better
+    geom_line(aes(y = Score, color = ScoreType)) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+    scale_x_continuous("ID", labels = 1980:2018, breaks = 1980:2018) +
+    xlab("ID") +
+    xlim(1989, 2018
+    )
+)
+
+```
+
+
+## Sales per puplisher
+## Sales per rating
+## Sales per genre 
+
+# genre distribution
