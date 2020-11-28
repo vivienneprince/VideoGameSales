@@ -1,0 +1,33 @@
+---
+title: "VideoGameSales"
+author: "amanda, ben, and viv"
+output: 
+  html_document:
+    df_print: paged
+    toc: yes
+    toc_depth: '3'
+    toc_float: yes
+---
+
+```{r, eval=TRUE, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+
+project.dir <- getwd()
+dataset.dir <- "data"
+outputs.dir <- "output"
+```
+
+# Data Import
+```{r}
+videogames.df <- read.csv(file.path(project.dir, dataset.dir, 'vgsales-12-4-2019.csv'))
+colnames(videogames.df)
+```
+
+
+
