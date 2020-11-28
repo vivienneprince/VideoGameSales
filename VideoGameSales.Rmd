@@ -23,7 +23,7 @@ dataset.dir <- "data"
 outputs.dir <- "output"
 ```
 
-# Data Import and Cleaning
+# Data Import and Cleaning {.tabset}
 
 ## Data Import
 ```{r}
@@ -32,7 +32,7 @@ colnames(videogames.df)
 ```
 
 ## Data cleaning
-Since 
+Since the data was collected in April of 2019
 ```{r}
 videogames.clean <- videogames.df %>% filter(Year < 2019)
 ```
