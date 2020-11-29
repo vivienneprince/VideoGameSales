@@ -84,7 +84,7 @@ vs_sales.byregion.byyear %>% ggplot(aes(x=Year, y= Sales))+
 ```
 
 ## Scoring
-WRitE SOMethiNG Here
+Here we looked at distribution of User Scores and Critic Scores as well as the average Critic and User Score over time.
 ```{r}
 fig <- plot_ly(x = videogames.clean$Critic_Score[which(!is.na(videogames.clean$Critic_Score))],
              type = "histogram")
