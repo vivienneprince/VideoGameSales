@@ -31,6 +31,12 @@ We will (c) construct a confidence interval for population correlation between c
 ### Part 5: Work Distribution
 For work distribution, we plan on working together collaboratively over voice call at least 4h a week and ramping up leading up to the presentation date. As a preliminary outline, Amanda will be working on parts 1 − 2, Ben on parts 3 − 4, Viv on part 5, and adjusting as needed. 
   
+Adjustments:
+1 - amanda, ben, viv
+2 - viv
+3 - ben
+4 - amanda
+5 - TBD
   
   
 # Metadata
