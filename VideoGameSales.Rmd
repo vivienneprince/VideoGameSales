@@ -23,7 +23,7 @@ dataset.dir <- "data"
 outputs.dir <- "output"
 ```
 
-# 0 Data Import and Cleaning {.tabset}
+# 0. Data Import and Cleaning {.tabset}
 
 ## Data Import
 ```{r}
@@ -129,7 +129,7 @@ ggplotly(
 
 
 
-# 2. One sample stats inference for response variable of interest (sales)
+# 2. One sample stats inference for response variable of interest (sales) bib
 	⁃	construct CI for population mean value for sales
 	⁃
 	⁃	assumptions:
@@ -144,6 +144,9 @@ ggplotly(
 # 3. Construct confidence interval for proportion of video games in a certain genre (genre TBD)
 
 # 4. Our two-sample test variables will be looking at the differences in sales between two genre types: sports and shooters. We choose these genres as they are most frequent and are very popular with similar gaming crowds ie. FIFA vs. COD essentially.
+SALES in SPORTS VS SHOOterS
+H_0: mean sales spots - mean sales shooter = 0
+H_a: not equal 0
 
 # 5. We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap.
 
