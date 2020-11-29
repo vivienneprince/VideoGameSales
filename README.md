@@ -17,7 +17,7 @@ Our response variable of interest will be video game sales.
  
  
 ### Part 2: Categorical Explanatory Variable 
-Our categorical explanatory variable will be the different publishers of the video games.
+Our categorical explanatory variable will be the different genre of the video games.
  
  
 ### Part 3: Two-sample Test Variables
