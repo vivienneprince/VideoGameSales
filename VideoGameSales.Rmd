@@ -61,7 +61,7 @@ for (var in videogames.clean){
 
 
 ## All Sales
-From the boxplot we can see that we have 2 extreme outliers. After investigating, it looks like two outliers are the for GTA V (ps3 and ps4)
+From the boxplot we can see that we have 2 extreme outliers. After investigating, it looks like two outliers are GTA V (ps3 and ps4)
 ```{r}
 hist(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
 
