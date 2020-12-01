@@ -189,7 +189,7 @@ avgsales
 
 #0.3670216
 
-#Mean does not fall into 95% confidence interval so we reject Null Hypothesis
+#Mean does not fall into 95% confidence interval so we reject Null Hypothesis. However, due to the sample not being randomized, we should opt to use bootstrapping instead.
 
 ```
 
