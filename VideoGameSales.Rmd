@@ -170,9 +170,51 @@ avgsales
 
 
 # 4. Our two-sample test variables will be looking at the differences in sales between two genre types: sports and shooters. We choose these genres as they are most frequent and are very popular with similar gaming crowds ie. FIFA vs. COD essentially.
+
+Assumptions for Two-Sided Significance Test for Comparing Two Population Means: 
+1) A quantitative response variable for two groups - in this case is our sales  which is quantitative.
+2) Independent Random Samples - our data isn't random 
+3) Approx. Normal Population for each group - Not true, the sales of video games has a major right skew as most of the video games sold do not sell very well. The majority of games sell less than $ 1 million US Dollars. 
+
+```{r}
+vs_byregion %>% 
+  filter(Genre == "Sports") %>%
+  ggplot(aes(x=Sales)) +
+  geom_histogram()
+vs_byregion %>% 
+  filter(Genre == "Shooter") %>%
+  ggplot(aes(x=Sales)) +
+  geom_histogram()
+```
+
 SALES in SPORTS VS SHOOterS
-H_0: mean sales sports - mean sales shooter = 0
+H_0: mean sales spots - mean sales shooter = 0
 H_a: not equal 0
+
+```{r}
+mean(vs_byregion$Sales[vs_byregion$Genre=="Sports"], na.rm=TRUE)
+mean(vs_byregion$Sales[vs_byregion$Genre=="Shooter"], na.rm=TRUE)
+```
+
+Step 2: Calculate the test statistic
+Step 3: ???
+Step 4: Obtain p-Value and profit
+
+```{r}
+x1 <- vs_byregion %>%
+  filter(Genre=="Sports")
+x2 <- vs_byregion %>%
+  filter(Genre=="Shooter")
+x3 <- vs_byregion %>%
+  filter((Genre == "Sports") | (Genre == "Shooter"))
+```
+
+
+```{r}
+t.test(vs_byregion$Sales~x3$Genre)
+```
+
+
 
 # 5. We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap.
 
