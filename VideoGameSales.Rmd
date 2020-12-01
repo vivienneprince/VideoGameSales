@@ -142,7 +142,7 @@ ggplotly(
 
 
 # 3. Construct confidence interval for proportion of video games in a certain genre (Action) (conduct hypothesis test against pre-specified constant)
-Here we conducted a t test with 95% confidence interval looking at sales for the Action Genre. We ignored any NA values. We can see that the confidence intervals for Action game sales are much higher than the confidence intervals for the video game sales of the entire dataset thus rejecting the null hypothesis.
+Here we conducted a t test with 95% confidence intervals looking at sales for the Action Genre. We ignored any NA values. We can see that the mean video game sales does not fall into our 95% confidence intervals for Action game sales. Thus, we reject the null hypothesis.
 ```{r}
 
 #Ignored all NA values
@@ -157,14 +157,14 @@ actionconf
 
 # 0.3780538 0.4555330
 
-#Null Hypothesis would be that confidence intervals are equal
+#Null Hypothesis would be that mean video game sales falls between .378 and .456
 
+avgsales<-mean(videogames.clean$Global_Sales,na.rm=T)
+avgsales
 
-t.test(videogames.clean$Global_Sales, conf.level = 0.95)$conf.int
+#0.3670216
 
-#0.3552499 0.3787933
-
-#Not Equal so we reject Null Hypothesis
+#Mean does not fall into 95% confidence interval so we reject Null Hypothesis
 
 ```
 
