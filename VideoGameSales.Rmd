@@ -180,7 +180,7 @@ Check assumptions:
 
 Although the t-distribution CI is robust against non-normal populations, it is highly sensitive to violations of the random sampling assumption. Since our dataset would be missing a disproportionate amount of non-western games, and older games. So we likely have an undercoverage issue using the t-distribution method if we consider our population to be all video games that ever existed worldwide. But if we consider our population to be ???????????? then the CI we have is trustworthy
 
-We can also use bootstrap to estimate the 95% CI for the mean of video game sales. I would not expect this result to be significantly different, or better than the t-distribution method because bootstrapping is also sensitive to non-random 
+We can also use bootstrap to estimate the 95% CI for the mean of video game sales. I would not expect this result to be significantly different, or better than the t-distribution method because bootstrapping is also sensitive to non-random sampling, because the assumption is that our sample is a good representation of the population we are intrested in.
 
 ```{r}
 
