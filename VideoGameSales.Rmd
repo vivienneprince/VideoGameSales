@@ -149,20 +149,42 @@ videogames.clean %>% group_by(Year) %>% summarise(
 
 # Remove GTA V outliers
 ```{r}
-videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales > 17), ] 
+videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales < 17 | !is.na(videogames.clean$Global_Sales)), ] 
 ```
 
 
 # 2. One sample stats inference for response variable of interest (sales) 
 	⁃	construct CI for population mean value for sales
 
-	⁃	assumptions:
-	⁃	sample is randomized: we will pick a random sample from our data
-	⁃	population distribution is approximately normal: 
-	⁃	NO, very left skewed, but we will use large sample sizes so that will not be too much of a problem
-	⁃	Extreme outliers: 
-	⁃	we will remove extreme outliers (GTA V)
+T-Distribution
+```{r}
+confidence <- 0.95
+n <- length(videogames.clean$Global_Sales)
+mu.hat <- mean(videogames.clean$Global_Sales)
+sd.hat <- sd(videogames.clean$Global_Sales)
 
+se <- sd.hat/sqrt(n)
+alpha <- 1-confidence
+
+CI <- c(mu.hat - qt(1-alpha/2, n-1)*se,
+        mu.hat + qt(1-alpha/2, n-1)*se)
+
+mu.hat
+CI
+```
+
+Check assumptions:
+* The sample is not randomized (vgchartz's game database does not include all games and would have a bias towards including games that are available in english)
+* The population sales distribution is not normal at all (extreme right skew)
+* The dataset had two extreme outliers identified via boxplot, and removed.
+
+Although the t-distribution CI is robust against non-normal populations, it is highly sensitive to violations of the random sampling assumption. Since our dataset would be missing a disproportionate amount of non-western games, and older games. So we likely have an undercoverage issue using the t-distribution method if we consider our population to be all video games that ever existed worldwide. But if we consider our population to be ???????????? then the CI we have is trustworthy
+
+We can also use bootstrap to estimate the 95% CI for the mean of video game sales. I would not expect this result to be significantly different, or better than the t-distribution method because bootstrapping is also sensitive to non-random 
+
+```{r}
+
+```
 
 
 # 3. Construct confidence interval for proportion of video games in a certain genre (Action) (conduct hypothesis test against pre-specified constant)
@@ -189,7 +211,7 @@ avgsales
 
 #0.3670216
 
-#Mean does not fall into 95% confidence interval so we reject Null Hypothesis. However, due to the sample not being randomized, we should opt to use bootstrapping instead.
+#Mean does not fall into 95% confidence interval so we reject Null Hypothesis
 
 ```
 
