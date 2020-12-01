@@ -114,7 +114,10 @@ videogames.clean %>% ggplot() +
 We have a ton of publishers
 
 ### Year
-
+```{r}
+videogames.clean %>% ggplot(aes(x = Year)) +
+  geom_bar()
+```
 
 ## Notable Correlations {.tabset}
 
