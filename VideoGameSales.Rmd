@@ -147,14 +147,15 @@ videogames.clean %>% group_by(Year) %>% summarise(
   )
 ```
 
+# Remove GTA V outliers
 ```{r}
 videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales > 17), ] 
 ```
 
 
-# 2. One sample stats inference for response variable of interest (sales) bib
+# 2. One sample stats inference for response variable of interest (sales) 
 	⁃	construct CI for population mean value for sales
-	⁃
+
 	⁃	assumptions:
 	⁃	sample is randomized: we will pick a random sample from our data
 	⁃	population distribution is approximately normal: 
