@@ -10,17 +10,13 @@ output:
 ---
 
 ```{r, eval=TRUE, include=FALSE}
-
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
-
 library(tidyverse)
 library(ggplot2)
 library(plotly)
-
-
 project.dir <- getwd()
-dataset.dir <- "data"
-outputs.dir <- "output"
+dataset.dir <- 'data'
+outputs.dir <- 'output'
 ```
 
 # 0. Data Import and Cleaning {.tabset}
@@ -32,13 +28,18 @@ colnames(videogames.df)
 ```
 
 ## Data cleaning
-Since the data was collected in April of 2019, we are excluding games with year = 2019 since it does not give a comprehensive picture of all the sales during 2019. 
 ```{r}
+# Since the data was collected in April of 2019, we are excluding games with year = 2019 since it does not give a comprehensive picture of all the sales during 2019. 
 videogames.clean <- videogames.df %>% filter(Year < 2019)
+# E was originally called KA for ESRB ratings, so we are going to make all the KA ratings E
+videogames.clean <- videogames.clean %>% mutate(ESRB_Rating = replace(ESRB_Rating, ESRB_Rating=='KA', 'E'))
+# Make give the ESRB rating levels for easier graphing/ data manipulation
+unique(videogames.clean$ESRB_Rating)
+videogames.clean$ESRB_Rating <- factor(videogames.clean$ESRB_Rating,levels = c('','RP','E', 'EC', 'E10','T','M','AO'))
 ```
 
 ## Data reshaping
-We want to compare sales across different regions, so it would be convenient to have one column "region" and then a corresponding column for sales in USD (millions).
+We want to compare sales across different regions, so it would be convenient to have one column 'region' and then a corresponding column for sales in USD (millions).
 ```{r}
 vs_byregion <- videogames.clean %>% gather(Region, Sales, Global_Sales:Other_Sales, na.rm = T)
 ```
@@ -52,80 +53,99 @@ Conduct some descriptive analysis on the data, figuring out:
 * distributions of variables,
 * variables that appear to be strongly related with each other (using appropriate methods to quantify the relationships based on whether variables are numerical or categorical).
 
-```{r}
-for (var in videogames.clean){
-  hist(var)
-  print(var)
-}
-```
+## Distributions {.tabset}
 
-
-## All Sales
+### Sales
 From the boxplot we can see that we have 2 extreme outliers. After investigating, it looks like two outliers are GTA V (ps3 and ps4)
 ```{r}
-hist(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
-
+boxplot(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
+videogames.clean[which(videogames.clean$Global_Sales > 17), ]
 hist(videogames.clean$Global_Sales,
      xlab = 'Global Sales (millions of USD)',
      xlim = c(0, .5),
-     breaks = 10000)
-
-boxplot(videogames.clean$Global_Sales, xlab = 'Global Sales (millions of USD)')
-videogames.clean[which(videogames.clean$Global_Sales > 17), ]
-
-
+     breaks = 2000)
 ```
 
-## Sales by year 
+### Platform 
+```{r}
+ggplotly(
+videogames.clean %>% 
+  count(Platform, sort = TRUE) %>% 
+  ggplot(aes(x = reorder(Platform, -n), y = n)) +
+  geom_bar(stat = "identity",position = position_dodge(width=0)) +
+  theme(axis.text.x=element_text(angle=90,hjust=1, vjust = 0.5))
+)
+```
+
+
+### ESRB Rating 
+```{r}
+videogames.clean %>% ggplot(aes(x = ESRB_Rating)) +
+  geom_bar()
+```
+
+
+### Genre 
+```{r}
+videogames.clean %>% 
+  count(Genre, sort = TRUE) %>% 
+  ggplot(aes(x = reorder(Genre, -n), y = n)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x=element_text(angle=45,hjust=1))
+```
+
+
+### Scoring
+Here we looked at distribution of User Scores and Critic Scores as well as the average Critic and User Score over time.
+```{r}
+videogames.clean %>% ggplot() +
+  geom_histogram(binwidth = 0.5,aes(x = Critic_Score, fill = 'pink') ) +
+  geom_histogram(binwidth = 0.5,aes(x = User_Score, fill = 'blue') ) 
+```
+
+### Publisher
+We have a ton of publishers
+
+### Year
+```{r}
+videogames.clean %>% ggplot(aes(x = Year)) +
+  geom_bar()
+```
+
+## Notable Correlations {.tabset}
+
+### Sales by year 
 ```{r}
 vs_sales.byregion.byyear <- vs_byregion %>% group_by(Year, Region)  %>% summarize(Sales = sum(Sales))
 vs_sales.byregion.byyear %>% ggplot(aes(x=Year, y= Sales))+
   geom_line(aes(color = Region))
 ```
 
-## Scoring
-Here we looked at distribution of User Scores and Critic Scores as well as the average Critic and User Score over time.
+### Sales per platform
+### Sales per rating
+### Sales per genre 
+
+### ESRB Rating per year
+
+### Rating by year
 ```{r}
-fig <- plot_ly(x = videogames.clean$Critic_Score[which(!is.na(videogames.clean$Critic_Score))],
-             type = "histogram")
-
-fig
-
-ggplotly(
-  videogames.clean %>% ggplot() +
-    geom_histogram(binwidth = 0.5,aes(x = Critic_Score) ) +
-    geom_histogram(binwidth = 0.5,aes(x = User_Score, fill = "pink") ) 
-    
-)
-
-ggplotly(
-  videogames.clean %>% group_by(Year) %>% summarise(
-    User_Score = mean(User_Score, na.rm = T),
-    Critic_Score = mean(Critic_Score, na.rm = T), 
-    Vgchartzscore = mean(Vgchartzscore, na.rm = T)) %>% 
-    filter(Year >= 1989) %>%
-    mutate(User_Score2 = case_when(Year >= 1996 ~ User_Score,
-                             TRUE ~ NaN)) %>%
-    gather(ScoreType, Score, c(User_Score,Critic_Score,Vgchartzscore), na.rm = T)
- %>%
-    
-    ggplot(aes(x = Year)) + # TODO : Make look better
-    geom_line(aes(y = Score, color = ScoreType)) +
-    theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
-    scale_x_continuous("ID", labels = 1980:2018, breaks = 1980:2018) +
-    xlab("ID") +
-    xlim(1989, 2018
-    )
-)
-
+videogames.clean %>% group_by(Year) %>% summarise(
+  User_Score = mean(User_Score, na.rm = T),
+  Critic_Score = mean(Critic_Score, na.rm = T), 
+  Vgchartzscore = mean(Vgchartzscore, na.rm = T)) %>% 
+  filter(Year >= 1989) %>%
+  mutate(User_Score2 = case_when(Year >= 1996 ~ User_Score,
+                           TRUE ~ NaN)) %>%
+  gather(ScoreType, Score, c(User_Score,Critic_Score,Vgchartzscore), na.rm = T) %>%
+  
+  ggplot(aes(x = Year)) + # TODO : Make look better
+  geom_line(aes(y = Score, color = ScoreType)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
+  scale_x_continuous('ID', labels = 1980:2018, breaks = 1980:2018) +
+  xlab('ID') +
+  xlim(1989, 2018
+  )
 ```
-
-
-## Sales per puplisher
-## Sales per rating
-## Sales per genre 
-
-## genre distribution
 
 
 
@@ -143,6 +163,7 @@ ggplotly(
 
 # 3. Construct confidence interval for proportion of video games in a certain genre (Action) (conduct hypothesis test against pre-specified constant)
 Here we conducted a t test with 95% confidence intervals looking at sales for the Action Genre. We ignored any NA values. We can see that the mean video game sales does not fall into our 95% confidence intervals for Action game sales. Thus, we reject the null hypothesis.
+
 ```{r}
 
 #Ignored all NA values
