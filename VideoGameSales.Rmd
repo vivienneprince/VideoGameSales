@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(boot)
 project.dir <- getwd()
 dataset.dir <- 'data'
 outputs.dir <- 'output'
@@ -258,7 +259,7 @@ x3 <- vs_byregion %>%
 
 
 ```{r}
-t.test(vs_byregion$Sales~x3$Genre)
+#t.test(vs_byregion$Sales~x3$Genre)
 ```
 
 
