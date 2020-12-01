@@ -147,6 +147,9 @@ videogames.clean %>% group_by(Year) %>% summarise(
   )
 ```
 
+```{r}
+videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales > 17), ] 
+```
 
 
 # 2. One sample stats inference for response variable of interest (sales) bib
