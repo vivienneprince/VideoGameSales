@@ -117,7 +117,10 @@ videogames.clean %>% ggplot(aes(x = Year)) +
 
 ### Sales by year 
 ```{r}
-vs_sales.byregion.byyear <- vs_byregion %>% group_by(Year, Region)  %>% summarize(Sales = sum(Sales))
+vs_sales.byregion.byyear <- vs_byregion %>% 
+  group_by(Year, Region)  %>% 
+  summarize(SSales = sum(Sales)) %>% 
+  summarize(MSales = mean(Sales))
 vs_sales.byregion.byyear %>% ggplot(aes(x=Year, y= Sales))+
   geom_line(aes(color = Region))
 ```
@@ -179,7 +182,7 @@ The test result is statistically significant with a p value of 0.1805, and 95% c
 ```{r}
 # using all sample mean as population mean:
 mu0 <- mu.hat.all
-samp2008 <- videogames.clean %>% filter(Year == 2010 & !is.na(Global_Sales))  %>% pull(Global_Sales)
+samp2008 <- videogames.clean %>% filter(Year == 2008 & !is.na(Global_Sales))  %>% pull(Global_Sales)
 mu.hat <- mean(samp2008)
 t.test(samp2008, mu = mu0)
 ```
