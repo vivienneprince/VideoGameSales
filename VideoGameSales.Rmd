@@ -150,7 +150,7 @@ videogames.clean %>% group_by(Year) %>% summarise(
 
 # Remove GTA V outliers
 ```{r}
-videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales < 17 | !is.na(videogames.clean$Global_Sales)), ] 
+videogames.clean <- videogames.clean %>% filter(Global_Sales < 17 & !is.na(Global_Sales))
 ```
 
 
@@ -175,11 +175,11 @@ CI
 ```    
 
 One sample inference and CI (2008)  
-The test result is statistically signifigant 
+The test result is statistically significant with a p value of 0.1805, and 95% confidence interval of [0.3095337 0.3778467]. This means that on average, we are 95% confident that games in 2008 
 ```{r}
 # using all sample mean as population mean:
 mu0 <- mu.hat.all
-samp2008 <- videogames.clean %>% filter(Year == 2008 & !is.na(Global_Sales))  %>% pull(Global_Sales)
+samp2008 <- videogames.clean %>% filter(Year == 2010 & !is.na(Global_Sales))  %>% pull(Global_Sales)
 mu.hat <- mean(samp2008)
 t.test(samp2008, mu = mu0)
 ```
