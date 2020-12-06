@@ -157,11 +157,11 @@ videogames.clean <- videogames.clean[which(videogames.clean$Global_Sales < 17 | 
 # 2. One sample stats inference for response variable of interest (sales) 
 	⁃	construct CI for population mean value for sales
 
-T-Distribution
+Total sample mean and CI  
 ```{r}
 confidence <- 0.95
 n <- length(videogames.clean$Global_Sales)
-mu.hat <- mean(videogames.clean$Global_Sales)
+mu.hat.all <- mean(videogames.clean$Global_Sales)
 sd.hat <- sd(videogames.clean$Global_Sales)
 
 se <- sd.hat/sqrt(n)
@@ -170,8 +170,18 @@ alpha <- 1-confidence
 CI <- c(mu.hat - qt(1-alpha/2, n-1)*se,
         mu.hat + qt(1-alpha/2, n-1)*se)
 
-mu.hat
+mu.hat.all
 CI
+```    
+
+One sample inference and CI (2008)  
+The test result is statistically signifigant 
+```{r}
+# using all sample mean as population mean:
+mu0 <- mu.hat.all
+samp2008 <- videogames.clean %>% filter(Year == 2008 & !is.na(Global_Sales))  %>% pull(Global_Sales)
+mu.hat <- mean(samp2008)
+t.test(samp2008, mu = mu0)
 ```
 
 Check assumptions:
@@ -181,10 +191,9 @@ Check assumptions:
 
 Although the t-distribution CI is robust against non-normal populations, it is highly sensitive to violations of the random sampling assumption. Since our dataset would be missing a disproportionate amount of non-western games, and older games. So we likely have an undercoverage issue using the t-distribution method if we consider our population to be all video games that ever existed worldwide. But if we consider our population to be ???????????? then the CI we have is trustworthy
 
-We can also use bootstrap to estimate the 95% CI for the mean of video game sales. I would not expect this result to be significantly different, or better than the t-distribution method because bootstrapping is also sensitive to non-random sampling, because the assumption is that our sample is a good representation of the population we are intrested in.
+We can also use bootstrap to estimate the 95% CI for the mean of video game sales. I would not expect this result to be significantly different, or better than the t-distribution method because bootstrapping is also sensitive to non-random sampling, because the assumption is that our sample is a good representation of the population we are interested in.
 
 ```{r}
-
 ```
 
 
