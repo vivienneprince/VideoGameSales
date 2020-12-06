@@ -119,10 +119,14 @@ videogames.clean %>% ggplot(aes(x = Year)) +
 ```{r}
 vs_sales.byregion.byyear <- vs_byregion %>% 
   group_by(Year, Region)  %>% 
-  summarize(SSales = sum(Sales)) %>% 
-  summarize(MSales = mean(Sales))
-vs_sales.byregion.byyear %>% ggplot(aes(x=Year, y= Sales))+
-  geom_line(aes(color = Region))
+  summarize(SSales = sum(Sales)) 
+vs_sales.byregion.byyear$MSales <- vs_byregion %>% 
+  group_by(Year, Region)  %>% 
+  summarize(means = mean(Sales)) %>%
+  pull(means)
+vs_sales.byregion.byyear %>% ggplot(aes(x=Year))+
+  geom_line(aes(y= SSales, color = Region))+
+  geom_line(linetype = "dotted", aes(y= MSales*100, color = Region))
 ```
 
 ### Sales per platform
@@ -178,7 +182,7 @@ CI
 ```    
 
 One sample inference and CI (2008)  
-The test result is statistically significant with a p value of 0.1805, and 95% confidence interval of [0.3095337 0.3778467]. This means that on average, we are 95% confident that games in 2008 
+The test result is statistically significant with a p value of 0.1805, and 95% confidence interval of [0.3095337 0.3778467]. This means that on average, we are 95% confident that 
 ```{r}
 # using all sample mean as population mean:
 mu0 <- mu.hat.all
