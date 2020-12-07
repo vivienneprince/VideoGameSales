@@ -282,7 +282,74 @@ cohend
 
 # 5. We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap.
 
+```{r}
 
+# remove NAs from critic scores and sales
+vc5 <- videogames.clean %>% 
+  filter(!is.na(Critic_Score) & ! is.na(Global_Sales)) %>%
+  select(Critic_Score, Global_Sales)
+
+## Using boot() function for ST ERR/DISTRIBUTION of:
+##  - CORRELATION.
+
+fullsamp.corr <- cor(vc5$Critic_Score, vc5$Global_Sales)  # Full-sample correlation. 0.30
+
+vc5$Critic_Score[which(is.numeric(class(vc5$Critic_Score)))]
+
+r <- function(x, i) {cor(x[i,1], x[i,2])} # corr of columns 1 & 2
+
+library(boot) #for boot function
+res <- boot(data = vc5, statistic = r, R = 10000)
+res
+
+# Distribution of sample correlation.
+hist(res$t, breaks=20)
+
+
+
+
+#####################
+### BOOTSTRAP CONFIDENCE INTERVALS
+#####################
+
+### For CORRELATION example:
+
+### 95% Confidence interval:
+
+## PROPER way, via 1) accounting for bias; 2) using estimated quantiles.
+
+# To guarantee that our bootstrap distribution is "centered at population parameter",
+# we need to make sure it's mean = population parameter.
+mean(res$t)                          # That's the bootstrap distribution mean
+#cor(law$LSAT,law$GPA)   # Full sample correlations 
+                          # acts as our "best guess" at population correlation.
+                          # We need to cover it with a 95% probability area, 
+                          # !!! centered at it. !!!
+
+#mean(res$t) - cor(law$LSAT,law$GPA)  # That's the BIAS of bootstrap = {estimate - "population parameter"}
+
+bias <- mean(res$t) - fullsamp.corr # = (estimate - parameter)
+unbiased.est <- res$t - bias         # "De-biasing" the bootstrap distribution
+mean(unbiased.est)                   # Now our bootstrap distribution 
+                                     # is centered at "population parameter".
+
+hist(unbiased.est, breaks=20)
+
+# Now we can safely take the quantiles:
+c(quantile(unbiased.est, 0.025), 
+  quantile(unbiased.est, 0.975))
+```
+
+```{r}
+videogames.clean %>% 
+  filter(Name == "Yakuza Zero" | 
+           str_detect(Name, "Stardew Valley") | 
+           str_detect(Name, "Metal Gear Solid 2: Sons of Liberty")) %>%
+  select(Name, Global_Sales, Year) %>%
+  group_by(Name) %>%
+  summarise(Global_Sales = sum(Global_Sales)) %>%
+  arrange(desc(Global_Sales))
+```
 
 
 
