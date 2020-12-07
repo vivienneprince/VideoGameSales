@@ -120,13 +120,17 @@ videogames.clean %>% ggplot(aes(x = Year)) +
 vs_sales.byregion.byyear <- vs_byregion %>% 
   group_by(Year, Region)  %>% 
   summarize(SSales = sum(Sales)) 
+
 vs_sales.byregion.byyear$MSales <- vs_byregion %>% 
   group_by(Year, Region)  %>% 
   summarize(means = mean(Sales)) %>%
   pull(means)
+
+ggplotly(
 vs_sales.byregion.byyear %>% ggplot(aes(x=Year))+
   geom_line(aes(y= SSales, color = Region))+
   geom_line(linetype = "dotted", aes(y= MSales*100, color = Region))
+)
 ```
 
 ### Sales per platform
@@ -248,13 +252,13 @@ Assumptions for Two-Sided Significance Test for Comparing Two Population Means:
 3) Approx. Normal Population for each group - Not true, the sales of video games has a major right skew as most of the video games sold do not sell very well. The majority of games sell less than $ 1 million US Dollars. 
 
 ```{r}
-vs_byregion %>% 
+videogames.clean %>% 
   filter(Genre == "Sports") %>%
-  ggplot(aes(x=Sales)) +
+  ggplot(aes(x=Global_Sales)) +
   geom_histogram()
-vs_byregion %>% 
+videogames.clean %>% 
   filter(Genre == "Shooter") %>%
-  ggplot(aes(x=Sales)) +
+  ggplot(aes(x=Global_Sales)) +
   geom_histogram()
 ```
 
@@ -263,28 +267,19 @@ H_0: mean sales spots - mean sales shooter = 0
 H_a: not equal 0
 
 ```{r}
-mean(vs_byregion$Sales[vs_byregion$Genre=="Sports"], na.rm=TRUE)
-mean(vs_byregion$Sales[vs_byregion$Genre=="Shooter"], na.rm=TRUE)
-```
-
-Step 2: Calculate the test statistic
-Step 3: ???
-Step 4: Obtain p-Value and profit
-
-```{r}
-x1 <- vs_byregion %>%
+sports <- videogames.clean %>%
   filter(Genre=="Sports")
-x2 <- vs_byregion %>%
+shooter <- videogames.clean %>%
   filter(Genre=="Shooter")
-x3 <- vs_byregion %>%
-  filter((Genre == "Sports") | (Genre == "Shooter"))
 ```
-
 
 ```{r}
-#t.test(vs_byregion$Sales~x3$Genre)
+t.test(sports$Global_Sales, shooter$Global_Sales)
 ```
-
+```{r}
+cohend <- abs(mean(sports$Global_Sales, na.rm = TRUE)-mean(shooter$Global_Sales, na.rm = TRUE))/sd(videogames.clean$Global_Sales, na.rm = TRUE)
+cohend
+```
 
 
 # 5. We will (c) construct a confidence interval for population correlation between critic score and sales using bootstrap.
