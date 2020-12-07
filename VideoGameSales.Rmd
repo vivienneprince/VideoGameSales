@@ -120,13 +120,17 @@ videogames.clean %>% ggplot(aes(x = Year)) +
 vs_sales.byregion.byyear <- vs_byregion %>% 
   group_by(Year, Region)  %>% 
   summarize(SSales = sum(Sales)) 
+
 vs_sales.byregion.byyear$MSales <- vs_byregion %>% 
   group_by(Year, Region)  %>% 
   summarize(means = mean(Sales)) %>%
   pull(means)
+
+ggplotly(
 vs_sales.byregion.byyear %>% ggplot(aes(x=Year))+
   geom_line(aes(y= SSales, color = Region))+
   geom_line(linetype = "dotted", aes(y= MSales*100, color = Region))
+)
 ```
 
 ### Sales per platform
