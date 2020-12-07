@@ -232,11 +232,6 @@ avgsales
 
 #Cohen.d(t.test, data= videogames.clean)
 
-# Cohen's effect size
-abs(mean(actions$Global_Sales) - mean(videogames.clean$Global_Sales)) / sqrt((sd(actions$Global_Sales)^2 + (sd(videogames.clean$Global_Sales)^2)) / 2)
-
-#0.04389653
-
 ```
 
 
