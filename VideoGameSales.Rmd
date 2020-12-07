@@ -290,12 +290,35 @@ shooter <- videogames.clean %>%
   filter(Genre=="Shooter")
 ```
 
+```{r}
+boxplot(sports$Global_Sales, main = "Sports")
+boxplot(shooter$Global_Sales, main = "Shooter")
+```
 
 
 ```{r}
+arrange(sports, desc(Global_Sales))
+arrange(shooter, desc(Global_Sales))
+```
+```{r}
+sports.rm <- sports %>%
+  filter(Global_Sales < 10)
+arrange(sports.rm, desc(Global_Sales))
+
+shooter.rm <- shooter %>%
+  filter(Global_Sales < 10)
+arrange(shooter.rm, desc(Global_Sales))
+```
+```{r}
+t.test(sports.rm$Global_Sales, shooter.rm$Global_Sales)
+```
+```{r}
 t.test(sports$Global_Sales, shooter$Global_Sales)
 ```
-
+```{r}
+cohend <- abs(mean(shooter.rm$Global_Sales) - mean(sports.rm$Global_Sales)) / sqrt((sd(shooter.rm$Global_Sales)^2 + (sd(sports.rm$Global_Sales)^2)) / 2)
+cohend
+```
 ```{r}
 cohend <- abs(mean(shooter$Global_Sales) - mean(sports$Global_Sales)) / sqrt((sd(shooter$Global_Sales)^2 + (sd(sports$Global_Sales)^2)) / 2)
 cohend
