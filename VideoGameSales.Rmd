@@ -65,6 +65,8 @@ hist(videogames.clean$Global_Sales,
      xlab = 'Global Sales (millions of USD)',
      xlim = c(0, .5),
      breaks = 2000)
+
+videogames.clean %>% arrange(desc(Global_Sales))
 ```
 
 ### Platform 
