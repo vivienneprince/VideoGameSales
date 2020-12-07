@@ -15,6 +15,7 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(boot)
+library(ggpubr)
 project.dir <- getwd()
 dataset.dir <- 'data'
 outputs.dir <- 'output'
@@ -70,7 +71,6 @@ videogames.clean %>% arrange(desc(Global_Sales))
 ```
 
 ### Platform 
-```{r}
 ggplotly(
 videogames.clean %>% 
   count(Platform, sort = TRUE) %>% 
@@ -78,14 +78,11 @@ videogames.clean %>%
   geom_bar(stat = "identity",position = position_dodge(width=0)) +
   theme(axis.text.x=element_text(angle=90,hjust=1, vjust = 0.5))
 )
-```
 
 
 ### ESRB Rating 
-```{r}
 videogames.clean %>% ggplot(aes(x = ESRB_Rating)) +
   geom_bar()
-```
 
 
 ### Genre 
@@ -93,26 +90,30 @@ videogames.clean %>% ggplot(aes(x = ESRB_Rating)) +
 videogames.clean %>% 
   count(Genre, sort = TRUE) %>% 
   ggplot(aes(x = reorder(Genre, -n), y = n)) +
+  theme_minimal() +
   geom_bar(stat = "identity") +
   theme(axis.text.x=element_text(angle=45,hjust=1))
+
+
 ```
 
 
 ### Scoring
 Here we looked at distribution of User Scores and Critic Scores as well as the average Critic and User Score over time.
-```{r}
 videogames.clean %>% ggplot() +
   geom_histogram(binwidth = 0.5,aes(x = Critic_Score, fill = 'pink') ) +
   geom_histogram(binwidth = 0.5,aes(x = User_Score, fill = 'blue') ) 
-```
 
 ### Publisher
 We have a ton of publishers
 
 ### Year
 ```{r}
+ggplotly(
 videogames.clean %>% ggplot(aes(x = Year)) +
+  theme_minimal() +
   geom_bar()
+)
 ```
 
 ## Notable Correlations {.tabset}
@@ -126,9 +127,22 @@ vs_sales.byregion.byyear$MSales <- vs_byregion %>%
   group_by(Year, Region)  %>% 
   summarize(means = mean(Sales)) %>%
   pull(means)
+
+summary.data <- videogames.clean %>%
+  group_by(Year) %>%
+  summarise(SSales = sum(Global_Sales), 
+            MSales = mean(Global_Sales),
+            Critic = mean(Critic_Score))
+
+
+
+ggplotly(
 vs_sales.byregion.byyear %>% ggplot(aes(x=Year))+
+  theme_minimal() +
   geom_line(aes(y= SSales, color = Region))+
-  geom_line(linetype = "dotted", aes(y= MSales*100, color = Region))
+  geom_line(linetype = "dotted", aes(y= MSales*100, color = Region))+
+  geom_bar()
+)
 ```
 
 ### Sales per platform
@@ -139,7 +153,7 @@ vs_sales.byregion.byyear %>% ggplot(aes(x=Year))+
 
 ### Rating by year
 ```{r}
-videogames.clean %>% group_by(Year) %>% summarise(
+plot <- videogames.clean %>% group_by(Year) %>% summarise(
   User_Score = mean(User_Score, na.rm = T),
   Critic_Score = mean(Critic_Score, na.rm = T), 
   Vgchartzscore = mean(Vgchartzscore, na.rm = T)) %>% 
@@ -148,18 +162,26 @@ videogames.clean %>% group_by(Year) %>% summarise(
                            TRUE ~ NaN)) %>%
   gather(ScoreType, Score, c(User_Score,Critic_Score,Vgchartzscore), na.rm = T) %>%
   
+  
   ggplot(aes(x = Year)) + # TODO : Make look better
+  theme_minimal()+
   geom_line(aes(y = Score, color = ScoreType)) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5)) +
-  scale_x_continuous('ID', labels = 1980:2018, breaks = 1980:2018) +
-  xlab('ID') +
-  xlim(1989, 2018
-  )
+  scale_x_continuous('Year', labels = 2000:2018, breaks = 2000:2018) +
+  xlab('Year') +
+  xlim(2000, 2018) +
+  ylim(0, 10)
+
+
+  ggarrange(plot, 
+          labels = c(""),
+          ncol = 1, nrow = 2)
+
 ```
 
-# Remove GTA V outliers
+# rm GTA V outliers
 ```{r}
-videogames.clean <- videogames.clean %>% filter(Global_Sales < 17 & !is.na(Global_Sales))
+videogames.clean %>% filter(Global_Sales < 17 & !is.na(Global_Sales)) %>% arrange(desc(Global_Sales))
 ```
 
 
