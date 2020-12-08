@@ -67,7 +67,7 @@ hist(videogames.clean$Global_Sales,
      xlim = c(0, .5),
      breaks = 2000)
 
-videogames.clean %>% arrange(desc(Global_Sales))
+videogames.clean %>% arrange(desc(Global_Sales)) %>% select(Name, Platform, Genre, Global_Sales, Year)
 ```
 
 ### Platform 
@@ -307,7 +307,7 @@ cohend
 ```{r}
 
 # remove NAs from critic scores and sales
-vc5 <- videogames.clean %>% 
+vc5 <- videogames.clean2 %>% 
   filter(!is.na(Critic_Score) & ! is.na(Global_Sales)) %>%
   select(Critic_Score, Global_Sales)
 
@@ -326,6 +326,8 @@ res
 
 # Distribution of sample correlation.
 hist(res$t, breaks=20)
+
+
 
 
 
@@ -360,7 +362,124 @@ hist(unbiased.est, breaks=20)
 # Now we can safely take the quantiles:
 c(quantile(unbiased.est, 0.025), 
   quantile(unbiased.est, 0.975))
+
+
+
+
+dat <- data.frame(unbiased.est)
+dat <- dat %>% mutate(status = case_when(unbiased.est > 0.2790296 &
+                                           unbiased.est < 0.3188720 ~ "in",
+                                         TRUE ~ "out"))
+
+
+dat %>% ggplot() +
+  theme_minimal() +
+  geom_histogram(color = 'white',
+                 bins = 40,
+                 aes(unbiased.est,
+                     fill = status)) +
+  xlab("sample correlation mean") +
+  ylab("") +
+  geom_point(aes(x = 0.2989303, y =0), shape = "I", size = 4) +
+  geom_vline(xintercept = 0.2790296, size = 0.3) +
+  geom_vline(xintercept = 0.3188720, size = 0.3)
+
+
+vc5 %>% ggplot(aes(x = Critic_Score, y = Global_Sales)) +
+  theme_minimal() +
+  geom_point(color = "#82c4bb")+
+  ylab("Sales (mil USD)")+
+  xlab("Critic Score (0-10)")+
+  geom_smooth(method = "lm", color = '#eb5600', se = FALSE, size = .7)
 ```
+
+```{r}
+
+# remove NAs from critic scores and sales
+vc5 <- videogames.clean2 %>% 
+  filter(!is.na(User_Score) & ! is.na(Global_Sales)) %>%
+  select(User_Score, Global_Sales)
+
+## Using boot() function for ST ERR/DISTRIBUTION of:
+##  - CORRELATION.
+
+fullsamp.corr <- cor(vc5$User_Score, vc5$Global_Sales)  # Full-sample correlation. 0.30
+
+r <- function(x, i) {cor(x[i,1], x[i,2])} # corr of columns 1 & 2
+
+library(boot) #for boot function
+res <- boot(data = vc5, statistic = r, R = 10000)
+res
+
+# Distribution of sample correlation.
+hist(res$t, breaks=20)
+
+
+
+
+
+#####################
+### BOOTSTRAP CONFIDENCE INTERVALS
+#####################
+
+### For CORRELATION example:
+
+### 95% Confidence interval:
+
+## PROPER way, via 1) accounting for bias; 2) using estimated quantiles.
+
+# To guarantee that our bootstrap distribution is "centered at population parameter",
+# we need to make sure it's mean = population parameter.
+mean(res$t)                          # That's the bootstrap distribution mean
+#cor(law$LSAT,law$GPA)   # Full sample correlations 
+                          # acts as our "best guess" at population correlation.
+                          # We need to cover it with a 95% probability area, 
+                          # !!! centered at it. !!!
+
+#mean(res$t) - cor(law$LSAT,law$GPA)  # That's the BIAS of bootstrap = {estimate - "population parameter"}
+
+bias <- mean(res$t) - fullsamp.corr # = (estimate - parameter)
+unbiased.est <- res$t - bias         # "De-biasing" the bootstrap distribution
+mean(unbiased.est)                   # Now our bootstrap distribution 
+                                     # is centered at "population parameter".
+
+hist(unbiased.est, breaks=20)
+
+# Now we can safely take the quantiles:
+c(quantile(unbiased.est, 0.025), 
+  quantile(unbiased.est, 0.975))
+
+
+
+
+dat <- data.frame(unbiased.est)
+dat <- dat %>% mutate(status = case_when(unbiased.est > 0.1353552 &
+                                           unbiased.est < 0.3391475 ~ "in",
+                                         TRUE ~ "out"))
+
+
+dat %>% ggplot() +
+  theme_minimal() +
+  geom_histogram(color = 'white',
+                 bins = 40,
+                 aes(unbiased.est,
+                     fill = status)) +
+  xlab("sample correlation mean") +
+  ylab("") +
+  geom_point(aes(x = 0.2416502, y =0), shape = "I", size = 4) +
+  geom_vline(xintercept = 0.1353552, size = 0.3) +
+  geom_vline(xintercept = 0.3391475, size = 0.3)
+
+
+vc5 %>% ggplot(aes(x = User_Score, y = Global_Sales)) +
+  theme_minimal() +
+  geom_point(color = "#82c4bb")+
+  ylab("Sales (mil USD)")+
+  xlab("User Rating (0-10)")+
+  geom_smooth(method = "lm", color = '#eb5600', se = FALSE, size = .7)
+```
+
+
 
 ```{r}
 videogames.clean %>% 
