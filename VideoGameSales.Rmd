@@ -192,7 +192,7 @@ Total sample mean and CI
 ```{r}
 confidence <- 0.95
 n <- length(videogames.clean$Global_Sales)
-mu.hat.all <- mean(videogames.clean$Global_Sales)
+mu.hat.all <- mean(videogames.clean$Global_Sales, na.rm = T)
 sd.hat <- sd(videogames.clean$Global_Sales)
 
 se <- sd.hat/sqrt(n)
@@ -408,12 +408,16 @@ dat %>% ggplot() +
   geom_vline(xintercept = 0.3188720, size = 0.3)
 
 
+exp.model <-lm(Global_Sales ~ exp(Critic_Score), vc5)
+
 vc5 %>% ggplot(aes(x = Critic_Score, y = Global_Sales)) +
   theme_minimal() +
   geom_point(color = "#82c4bb")+
   ylab("Sales (mil USD)")+
   xlab("Critic Score (0-10)")+
-  geom_smooth(method = "lm", color = '#eb5600', se = FALSE, size = .7)
+  ggtitle("Video Game Sales vs Critic Score")+
+  geom_smooth(method="lm", color="#eb5600", formula= (y ~ exp(x)), se=FALSE, size = .7) 
+  #geom_smooth(method = "lm", color = '#eb5600', se = FALSE, size = .7, linetype = 2)
 ```
 
 ```{r}
